@@ -90,7 +90,6 @@
 .gvoice{position:absolute;top:max(18px,env(safe-area-inset-top));inset-inline-start:18px;z-index:5;width:42px;height:42px;border-radius:50%;border:1px solid rgba(180,160,255,.28);background:rgba(255,255,255,.07);color:#fff;font-size:17px;backdrop-filter:blur(8px);transition:.2s}
 .gvoice:hover,.gvoice:focus-visible{background:rgba(155,108,255,.25);border-color:#a987ff;outline:0}
 .gvoice[aria-pressed=true]{background:rgba(155,108,255,.4);border-color:#a987ff}
-.intro.s0 .gvoice{display:none}
 .guide{position:relative;z-index:4;display:flex;align-items:flex-end;gap:12px;width:min(640px,100%);padding:0 2px 4px}
 .intro.s0 .guide{display:none}
 .gbot{width:64px;flex:0 0 64px}
@@ -290,7 +289,6 @@ intro.querySelectorAll('.botslot').forEach(s=>s.innerHTML=BOT);
 const slides=[...intro.querySelectorAll('.slide')], dotsWrap=$('#introDots'), nextBtn=$('#introNext'), skipBtn=$('#introSkip'), voiceBtn=$('#gVoice'), gtext=$('#gtext'), gbubble=$('#gbubble');
 const last=slides.length-1; let cur=0, open=false, demoT=[], raf=0, lang='fr', typeT=0, full='', voiceOn=false, spk=0;
 const SS=window.speechSynthesis;
-if(!SS||!window.SpeechSynthesisUtterance)voiceBtn.style.display='none';
 
 // langue : choix mémorisé, sinon langue du navigateur
 try{lang=localStorage.getItem(LKEY)||''}catch(e){}
@@ -305,17 +303,28 @@ function applyLang(l,save){if(!T[l])return;lang=l;const t=T[l];
  if(save)try{localStorage.setItem(LKEY,l)}catch(e){}}
 
 // voix du robot (facultative)
-function speechCancel(){spk++;intro.classList.remove('speaking');if(SS)try{SS.cancel()}catch(e){}}
-function speak(txt){if(!voiceOn||!SS)return;speechCancel();const id=spk,u=new SpeechSynthesisUtterance(txt);u.lang=LANGS[lang];
+let aud=null;
+function speechCancel(){spk++;intro.classList.remove('speaking');if(aud){try{aud.pause()}catch(e){}aud=null}if(SS)try{SS.cancel()}catch(e){}}
+// meilleure voix disponible : voix « naturelles / neuronales / premium » en priorité, jamais les voix compactes
+function pickVoice(code){if(!SS)return null;const l2=code.slice(0,2).toLowerCase(),want=code.toLowerCase();
+ const vs=SS.getVoices().filter(v=>v.lang&&v.lang.replace('_','-').toLowerCase().startsWith(l2));if(!vs.length)return null;
+ const sc=v=>{const n=v.name,L=v.lang.replace('_','-').toLowerCase();return(/natural|neural|online/i.test(n)?12:0)+(/premium|enhanced|siri|am\u00e9lior/i.test(n)?9:0)+(/google/i.test(n)?6:0)+(L===want?3:0)+(v.localService?0:1)-(/compact|espeak|novelty/i.test(n)?8:0)};
+ return vs.sort((a,b)=>sc(b)-sc(a))[0]}
+function speakTTS(txt,id){if(!SS||!window.SpeechSynthesisUtterance)return;const u=new SpeechSynthesisUtterance(txt);u.lang=LANGS[lang];const v=pickVoice(LANGS[lang]);if(v){try{u.voice=v;u.lang=v.lang}catch(e){}}u.rate=.97;u.pitch=1.05;
  u.onstart=()=>{if(id===spk)intro.classList.add('speaking')};u.onend=u.onerror=()=>{if(id===spk)intro.classList.remove('speaking')};SS.speak(u)}
-voiceBtn.onclick=()=>{voiceOn=!voiceOn;voiceBtn.textContent=voiceOn?'🔊':'🔇';voiceBtn.setAttribute('aria-pressed',voiceOn);if(voiceOn&&cur>0)speak(full);else speechCancel()}
+// voix : d'abord un enregistrement naturel s'il existe (audio/<langue>/<étape>.mp3), sinon la meilleure voix du navigateur
+function speak(txt,n){if(!voiceOn)return;speechCancel();const id=spk;
+ if(n){const a=new Audio('audio/'+lang+'/'+n+'.mp3');aud=a;a.onplaying=()=>{if(id===spk)intro.classList.add('speaking')};a.onended=()=>{if(id===spk)intro.classList.remove('speaking')};
+  const fb=()=>{if(id===spk){aud=null;speakTTS(txt,id)}};a.onerror=fb;a.play().catch(fb);return}
+ speakTTS(txt,id)}
+voiceBtn.onclick=()=>{voiceOn=!voiceOn;voiceBtn.textContent=voiceOn?'🔊':'🔇';voiceBtn.setAttribute('aria-pressed',voiceOn);if(voiceOn&&cur>0)speak(full,cur);else speechCancel()}
 
 // le robot parle : texte tapé dans la bulle + bouche animée
-function say(txt){clearInterval(typeT);full=txt;speechCancel();
- if(RM){gtext.textContent=txt;speak(txt);return 0}
+function say(txt,n){clearInterval(typeT);full=txt;speechCancel();
+ if(RM){gtext.textContent=txt;speak(txt,n);return 0}
  gtext.textContent='';let k=0;intro.classList.add('talking');
  typeT=setInterval(()=>{gtext.textContent=txt.slice(0,++k);if(k>=txt.length){clearInterval(typeT);intro.classList.remove('talking')}},TYPE);
- speak(txt);return txt.length*TYPE}
+ speak(txt,n);return txt.length*TYPE}
 gbubble.onclick=()=>{clearInterval(typeT);gtext.textContent=full;intro.classList.remove('talking')};
 
 // pastilles de progression (la 1re étape = choix de langue : pas de pastille)
@@ -333,7 +342,7 @@ function go(n){if(n<0||n>last)return;cur=n;
  intro.classList.toggle('s0',n===0);intro.classList.toggle('islast',n===last);
  slides.forEach((s,j)=>{s.classList.toggle('active',j===n);s.setAttribute('aria-hidden',j!==n)});
  let ms=0;
- if(n>0)ms=say(T[lang].say[n-1]);else{clearInterval(typeT);speechCancel();intro.classList.remove('talking')}
+ if(n>0)ms=say(T[lang].say[n-1],n);else{clearInterval(typeT);speechCancel();intro.classList.remove('talking')}
  if(n>0&&n<last){const base=+slides[n].dataset.t||5000;dots[n].style.setProperty('--t',Math.max(base,ms+3000)+'ms')}
  dots.forEach((d,j)=>{d.classList.toggle('done',j<n);d.classList.toggle('active',j===n)});
  nextBtn.textContent=n===last?T[lang].start:T[lang].next;

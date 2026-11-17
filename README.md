@@ -34,4 +34,4 @@ Recherche web connectée, génération d'images, lecture/analyse réelle des PDF
 Envoyez tout le contenu du dossier dans un dépôt GitHub, puis Settings → Pages → Deploy from branch → `main` / root. L'interface et l'animation fonctionnent ; les vraies réponses IA demandent le serveur Node (`npm start`) hébergé ailleurs (Render, Railway…).
 
 ---
-BRYSS AI — créé par Issam Akdi & Bryana Lebon
+BRYSS AI — créé par Issam Akdi.
