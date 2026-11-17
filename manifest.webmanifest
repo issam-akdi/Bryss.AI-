@@ -9,7 +9,7 @@
   "lang": "fr",
   "background_color": "#080812",
   "theme_color": "#080812",
-  "description": "Votre assistant intelligent. Créé par Issam Akdi.",
+  "description": "Votre assistant intelligent. Créé par Issam Akdi & Bryana Lebon.",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },

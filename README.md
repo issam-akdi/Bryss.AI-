@@ -1,37 +1,37 @@
-# BRYSS AI — première version
+# BRYSS AI
 
-BRYSS AI est une première interface web responsive, avec une identité visuelle noir / violet / bleu.
+Assistant IA créé par **Issam Akdi et Bryana Lebon**.
 
-## Lancer l'interface
-- Ouvrez `index.html` dans un navigateur pour tester l'interface en mode aperçu.
-- Les messages de démonstration ne sont pas générés par un vrai modèle IA.
+## Ce que contient le projet
+- `index.html` : l'application (interface, robot guide Bry, 29 langues, installable)
+- `server.js` : le moteur IA (aucune dépendance, Node.js 18+). La clé API reste sur le serveur.
+- `config.js` : l'adresse de ton serveur (à remplir une fois le serveur en ligne)
+- `manifest.webmanifest`, `sw.js`, `icon*` : installation comme une appli
+- `tools/` + `.github/` : génération facultative de voix naturelles
 
-## Activer le moteur IA
-1. Installez Node.js (version 18 ou plus récente).
-2. Dans ce dossier, lancez `npm install`.
-3. Copiez `.env.example` vers `.env`.
-4. Ajoutez votre clé API dans `OPENAI_API_KEY`.
-5. Lancez `npm start`, puis ouvrez http://localhost:3000.
+## Moteur IA (gratuit avec Gemini)
+1. Crée une clé sur https://aistudio.google.com/apikey
+2. Héberge `server.js` sur un service qui exécute Node.js (Render, Railway…).
+   - Commande de démarrage : `npm start`
+   - Variable d'environnement : `AI_API_KEY` = ta clé
+3. Ouvre `config.js` et mets l'adresse du serveur :
+   `window.BRYSS_API_URL = "https://ton-serveur.onrender.com";`
+4. L'indicateur en haut de l'appli passe de « Démo » à « En ligne ».
 
-La clé API reste côté serveur et ne doit jamais être ajoutée au HTML ou au JavaScript du navigateur.
+Variables facultatives : `AI_MODEL` (défaut `gemini-3.5-flash`), `AI_BASE_URL` (tout service compatible OpenAI),
+`ALLOWED_ORIGINS` (défaut `https://issam-akdi.github.io`), `LIMIT_PER_MINUTE`, `LIMIT_PER_DAY`, `LIMIT_GLOBAL_PER_DAY`.
+
+Remarque : avec l'offre gratuite de Gemini, Google indique que les données envoyées peuvent servir à améliorer ses produits.
+
+## Tester en local
+`AI_API_KEY=ta_cle node server.js` puis http://localhost:3000
 
 ## Déjà inclus
-- **Robot guide « Bry » + 29 langues** (FR, EN, NL, ES, AR, PT, DE, IT, TR, RU, UK, PL, ZH, JA, KO, HI, BN, UR, FA, ID, VI, TH, SV, EL, HE, RO, CS, HU, SW) avec recherche, arabe/persan/ourdou/hébreu en lecture droite→gauche, et voix du robot en option (synthèse vocale du navigateur). Pour ajouter une langue : ajouter une ligne dans `META` et un objet dans `T` (dans index.html).
-- **Animation de bienvenue** au tout premier lancement (5 écrans animés qui présentent BRYSS AI) : affichée une seule fois, bouton « Passer » à tout moment (Échap marche aussi). Elle peut être revue depuis Paramètres → « Revoir la présentation ». Pour la retester : supprimez la clé `bryss_intro_done_v1` du localStorage.
-- Application installable (PWA) : icônes, manifest et service worker inclus (fonctionne en https ou sur localhost)
-- Interface responsive ordinateur / tablette / mobile
-- Historique local dans le navigateur
-- Nouvelle conversation
-- Dictée vocale si le navigateur la prend en charge
-- Sélection de fichiers (aperçu, pas encore d'analyse du contenu)
-- Export de conversation en .txt
-- Connexion serveur à l'API OpenAI (après configuration)
+- Robot guide « Bry » + animation de bienvenue (une seule fois, bouton « Passer »), 29 langues, voix en option
+- Application installable (PWA)
+- Historique local, export .txt, dictée vocale, thème clair
+- Réponses de l'IA avec mise en forme (gras, code)
+- Protection : clé jamais envoyée au navigateur, limites d'usage par personne et par jour
 
 ## À développer ensuite
-Recherche web connectée, génération d'images, lecture/analyse réelle des PDF et documents, mémoire synchronisée, authentification, abonnements/paiements et publication sur un hébergement web.
-
-## Publier sur GitHub Pages (mode démo, sans serveur)
-Envoyez tout le contenu du dossier dans un dépôt GitHub, puis Settings → Pages → Deploy from branch → `main` / root. L'interface et l'animation fonctionnent ; les vraies réponses IA demandent le serveur Node (`npm start`) hébergé ailleurs (Render, Railway…).
-
----
-BRYSS AI — créé par Issam Akdi.
+Recherche web, génération d'images, lecture des PDF, comptes utilisateurs, mémoire synchronisée, abonnements.

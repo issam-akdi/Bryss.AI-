@@ -1,6 +1,6 @@
 // Service worker minimal : permet l'installation et l'ouverture hors-ligne de l'interface.
 // Les appels /api/* passent toujours par le réseau.
-const CACHE = 'bryss-ai-v3';
+const CACHE = 'bryss-ai-v4';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {

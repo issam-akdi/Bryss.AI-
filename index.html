@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080812">
-<meta name="author" content="Issam Akdi">
-<meta name="description" content="BRYSS AI — votre assistant intelligent. Créé par Issam Akdi.">
+<meta name="author" content="Issam Akdi &amp; Bryana Lebon">
+<meta name="description" content="BRYSS AI — votre assistant intelligent. Créé par Issam Akdi &amp; Bryana Lebon.">
 <title>BRYSS AI — Votre intelligence, sans limites</title>
 <link rel="manifest" href="manifest.webmanifest">
+<script src="config.js"></script>
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script>try{if(localStorage.getItem('bryss_intro_done_v1')==='1')document.documentElement.classList.add('seen-intro')}catch(e){}</script>
@@ -122,6 +123,7 @@
 .intro[dir=rtl] .fcard{text-align:right}
 @media(max-width:560px){.gbubble{font-size:13.5px;min-height:112px;padding:12px 14px}.gbot{width:56px;flex-basis:56px}.bigbot{width:128px}.stage{margin-top:36px}.ititle{font-size:clamp(26px,8vw,36px)}}
 @media(max-height:640px){.bigbot{width:96px;margin-bottom:10px}.gbubble{min-height:84px}.stage{margin-top:30px}}
+.bubble pre{background:#0a0a18;border:1px solid var(--line);border-radius:10px;padding:10px 12px;overflow:auto;white-space:pre;margin:8px 0;font-size:12px;line-height:1.5}.bubble code{font-family:ui-monospace,Menlo,Consolas,monospace;background:#1b1a33;padding:1px 5px;border-radius:5px;font-size:12px}.bubble pre code{background:none;padding:0}
 </style>
 </head>
 <body>
@@ -137,11 +139,11 @@
   <div class="history" id="history"><button>Aucune conversation</button></div>
   <div class="sidebottom">
     <div class="navitem" id="settingsBtn"><span class="ico">⚙</span> Paramètres</div>
-    <div class="profile"><div class="avatar">B</div><div><strong style="font-size:12px">BRYSS AI</strong><small>Créé par Issam Akdi</small></div></div>
+    <div class="profile"><div class="avatar">B</div><div><strong style="font-size:12px">BRYSS AI</strong><small>Créé par Issam Akdi &amp; Bryana Lebon</small></div></div>
   </div>
 </aside>
 <main class="main">
-  <header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="iconbtn mobilemenu" id="menuBtn">☰</button><div class="model"><span class="pulse"></span> BRYSS Assistant <span style="color:#77738e;font-weight:400">· Démo</span></div></div><div class="topactions"><button class="iconbtn" id="themeBtn" title="Changer le thème">☼</button><button class="iconbtn" id="exportBtn" title="Exporter la conversation">⇩</button></div></header>
+  <header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="iconbtn mobilemenu" id="menuBtn">☰</button><div class="model"><span class="pulse"></span> BRYSS Assistant <span id="modelState" style="color:#77738e;font-weight:400">· Démo</span></div></div><div class="topactions"><button class="iconbtn" id="themeBtn" title="Changer le thème">☼</button><button class="iconbtn" id="exportBtn" title="Exporter la conversation">⇩</button></div></header>
   <section class="content">
     <div class="welcome" id="welcome">
       <div class="orb">B</div>
@@ -205,7 +207,7 @@
     <section class="slide">
       <div class="shield r" style="--d:50">🔒</div>
       <h2 class="ititle r" style="--d:250"><span data-i="t5a"></span><br><span class="gradient" data-i="t5b"></span></h2>
-      <div class="credit r" style="--d:700"><span data-i="by"></span> <b>Issam Akdi</b></div>
+      <div class="credit r" style="--d:700"><span data-i="by"></span> <b>Issam Akdi &amp; Bryana Lebon</b></div>
     </section>
   </div>
   <div class="guide" id="guide">
@@ -218,19 +220,29 @@
   </div>
 </div>
 
-<div class="modalback" id="modalback"><div class="modal"><h2>Paramètres</h2><p>Personnalisez votre espace BRYSS AI. Cette première version conserve vos préférences dans ce navigateur.</p><label style="font-size:12px;color:#aaa">Langue de l'interface</label><select id="language" style="width:100%;background:#090916;color:white;border:1px solid var(--line);padding:11px;border-radius:10px;margin-top:7px"><option value="fr">Français</option><option value="en">English</option><option value="nl">Nederlands</option><option value="es">Español</option><option value="ar">العربية</option></select><p style="margin-top:18px">Connexion IA : pour obtenir des réponses générées par un vrai modèle, configurez le serveur avec votre clé API. Ne placez jamais cette clé dans le navigateur.</p><button id="replayIntro" type="button" style="width:100%;margin-top:6px;padding:11px;border-radius:10px;border:1px solid var(--line);background:transparent;color:#cfc7ed">▶ Revoir la présentation</button><button class="primary" id="closeModal">Terminer</button><p style="text-align:center;font-size:11px;margin:14px 0 0;color:#6d6987">BRYSS AI · Créé par Issam Akdi</p></div></div>
+<div class="modalback" id="modalback"><div class="modal"><h2>Paramètres</h2><p>Personnalisez votre espace BRYSS AI. Cette première version conserve vos préférences dans ce navigateur.</p><label style="font-size:12px;color:#aaa">Langue de l'interface</label><select id="language" style="width:100%;background:#090916;color:white;border:1px solid var(--line);padding:11px;border-radius:10px;margin-top:7px"><option value="fr">Français</option><option value="en">English</option><option value="nl">Nederlands</option><option value="es">Español</option><option value="ar">العربية</option></select><p style="margin-top:18px">Moteur IA : quand BRYSS AI est connecté à son serveur, l'indicateur en haut affiche « En ligne ». Sinon, l'appli répond en mode démo.</p><button id="replayIntro" type="button" style="width:100%;margin-top:6px;padding:11px;border-radius:10px;border:1px solid var(--line);background:transparent;color:#cfc7ed">▶ Revoir la présentation</button><button class="primary" id="closeModal">Terminer</button><p style="text-align:center;font-size:11px;margin:14px 0 0;color:#6d6987">BRYSS AI · Créé par Issam Akdi &amp; Bryana Lebon</p></div></div>
 <script>
 function getLang(){try{return localStorage.getItem('bryss_lang')||'fr'}catch(e){return 'fr'}}
 const $=s=>document.querySelector(s), chat=$('#chat'), promptBox=$('#prompt');
 let messages=[], attached=[];
 function toast(t){const el=$('#toast');el.textContent=t;el.style.display='block';setTimeout(()=>el.style.display='none',2600)}
-function addMessage(role,text){const m=document.createElement('div');m.className='message '+role;const a=document.createElement('div');a.className='msgavatar';a.textContent=role==='user'?'VO':'B';const b=document.createElement('div');b.className='bubble';b.textContent=text;m.append(a,b);chat.append(m);chat.scrollTop=chat.scrollHeight;messages.push({role,text});saveHistory();return m}
+function renderMd(t){let h=String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ h=h.replace(/```[\w+-]*\n?([\s\S]*?)```/g,(m,c)=>'<pre><code>'+c.replace(/\n$/,'')+'</code></pre>');
+ h=h.replace(/`([^`\n]+)`/g,'<code>$1</code>').replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/^#{1,4}\s+(.+)$/gm,'<b>$1</b>');
+ return h}
+function addMessage(role,text,eph){const m=document.createElement('div');m.className='message '+role;const a=document.createElement('div');a.className='msgavatar';a.textContent=role==='user'?'VO':'B';const b=document.createElement('div');b.className='bubble';if(role==='assistant')b.innerHTML=renderMd(text);else b.textContent=text;m.append(a,b);chat.append(m);chat.scrollTop=chat.scrollHeight;if(!eph){messages.push({role,text});saveHistory()}return m}
 function saveHistory(){try{localStorage.setItem('bryss_messages',JSON.stringify(messages));refreshHistory()}catch(e){}}
 function refreshHistory(){let h=$('#history');h.innerHTML='';let label=messages.find(x=>x.role==='user')?.text||'Aucune conversation';let btn=document.createElement('button');btn.textContent=label.slice(0,34);btn.onclick=()=>toast('Conversation actuelle');h.append(btn)}
 function showWelcome(){ $('#welcome').style.display=messages.length?'none':'block'; }
 function demoReply(q){let lower=q.toLowerCase();if(/bonjour|salut|hello|hey/.test(lower))return "Bonjour ! Ravi de vous retrouver sur BRYSS AI. Que pouvons-nous accomplir aujourd'hui ?";if(/html|css|javascript|code|programm/.test(lower))return "Avec plaisir ! Je peux vous aider à concevoir la structure, le style et la logique de votre projet. Dans cette version de démonstration, les réponses sont locales. Connectez le serveur IA pour obtenir une véritable génération de code.";if(/semaine|planning|journée|organiser/.test(lower))return "Pour commencer, notez vos 3 priorités principales. Bloquez ensuite les rendez-vous fixes, répartissez les tâches importantes sur des créneaux réalistes et gardez une marge pour les imprévus. Si vous me donnez vos contraintes, je peux vous proposer un planning.";return "Merci pour votre message ! BRYSS AI est actuellement en mode aperçu : l'interface, l'historique local et les outils de base sont prêts, mais le moteur IA n'est pas encore connecté.\n\nPour activer les vraies réponses, lancez le serveur inclus dans le projet et ajoutez votre clé API dans le fichier .env. Consultez le README pour les étapes."}
 async function send(){let q=promptBox.value.trim();if(!q&&!attached.length)return;$('#welcome').style.display='none';if(attached.length)q+=(q?'\n':'')+'Fichiers joints : '+attached.map(f=>f.name).join(', ');addMessage('user',q);promptBox.value='';promptBox.style.height='auto';attached=[];let typing=document.createElement('div');typing.className='typing';typing.textContent='BRYSS réfléchit…';chat.append(typing);chat.scrollTop=chat.scrollHeight;
- try{const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages.slice(-20)})});if(res.ok){const data=await res.json();typing.remove();addMessage('assistant',data.reply||'Je n’ai pas reçu de réponse.');return}}catch(e){}
+ const API=(window.BRYSS_API_URL||'').replace(/\/+$/,'');
+ try{const res=await fetch(API+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages.slice(-20)})});
+  if(res.ok){const data=await res.json();typing.remove();addMessage('assistant',data.reply||'Je n’ai pas reçu de réponse.');return}
+  let j=null;try{j=await res.json()}catch(e){}
+  if(j&&j.error){typing.remove();addMessage('assistant','⚠ '+(j.message||'Le serveur BRYSS AI a rencontré un problème. Réessaie dans un instant.'),true);return}
+  if(API){typing.remove();addMessage('assistant','⚠ Le serveur BRYSS AI a rencontré un problème. Réessaie dans un instant.',true);return}
+ }catch(e){if(API){typing.remove();addMessage('assistant','⚠ Impossible de joindre le serveur BRYSS AI. Vérifie ta connexion et réessaie dans un instant.',true);return}}
  await new Promise(r=>setTimeout(r,650));typing.remove();addMessage('assistant',demoReply(q));}
 $('#sendBtn').onclick=send;promptBox.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});promptBox.addEventListener('input',()=>{promptBox.style.height='auto';promptBox.style.height=Math.min(promptBox.scrollHeight,150)+'px'});
 $('#newChat').onclick=()=>{messages=[];chat.innerHTML='';$('#welcome').style.display='block';localStorage.removeItem('bryss_messages');refreshHistory();$('#sidebar').classList.remove('open')};
@@ -241,7 +253,10 @@ $('#themeBtn').onclick=()=>{document.body.classList.toggle('light');if(document.
 $('#settingsBtn').onclick=()=>$('#modalback').style.display='grid';$('#closeModal').onclick=()=>$('#modalback').style.display='none';$('#modalback').onclick=e=>{if(e.target.id==='modalback')$('#modalback').style.display='none'};
 $('#menuBtn').onclick=()=>$('#sidebar').classList.toggle('open');$('#historyNav').onclick=()=>toast('Votre historique est conservé sur cet appareil.');$('#filesNav').onclick=()=>toast('La gestion avancée des fichiers sera ajoutée dans une prochaine version.');
 $('#exportBtn').onclick=()=>{if(!messages.length){toast('Aucune conversation à exporter.');return}let blob=new Blob([messages.map(m=>(m.role==='user'?'Vous':'BRYSS AI')+' :\n'+m.text).join('\n\n')],{type:'text/plain'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='conversation-bryss-ai.txt';a.click();URL.revokeObjectURL(a.href)};
-try{messages=JSON.parse(localStorage.getItem('bryss_messages')||'[]');messages.forEach(m=>{let el=document.createElement('div');el.className='message '+m.role;let a=document.createElement('div');a.className='msgavatar';a.textContent=m.role==='user'?'VO':'B';let b=document.createElement('div');b.className='bubble';b.textContent=m.text;el.append(a,b);chat.append(el)});showWelcome();refreshHistory()}catch(e){}
+try{messages=JSON.parse(localStorage.getItem('bryss_messages')||'[]');messages.forEach(m=>{let el=document.createElement('div');el.className='message '+m.role;let a=document.createElement('div');a.className='msgavatar';a.textContent=m.role==='user'?'VO':'B';let b=document.createElement('div');b.className='bubble';if(m.role==='assistant')b.innerHTML=renderMd(m.text);else b.textContent=m.text;el.append(a,b);chat.append(el)});showWelcome();refreshHistory()}catch(e){}
+
+// indicateur : « En ligne » quand le moteur IA répond, « Démo » sinon
+(async()=>{try{const r=await fetch((window.BRYSS_API_URL||'').replace(/\/+$/,'')+'/health',{cache:'no-store'});const j=await r.json();if(j&&j.ai){const e=$('#modelState');e.textContent='· En ligne';e.style.color='#65e6b0'}}catch(e){}})();
 
 // installable + hors-ligne (uniquement en https ou localhost)
 if('serviceWorker' in navigator&&/^https:|^http:\/\/localhost/.test(location.href)){navigator.serviceWorker.register('sw.js').catch(()=>{})}

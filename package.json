@@ -1,14 +1,11 @@
 {
   "name": "bryss-ai",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "BRYSS AI — créé par Issam Akdi & Bryana Lebon",
   "private": true,
   "type": "module",
+  "engines": { "node": ">=18" },
   "scripts": {
     "start": "node server.js"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.21.2",
-    "openai": "^4.77.0"
   }
 }
